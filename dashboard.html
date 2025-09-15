@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - Renewable Energy Monitoring</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- TOPBAR (fixed) -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button id="profileBtn" class="icon-btn" title="Profile"><i class="fa-solid fa-user"></i></button>
+    </div>
+
+    <div class="topbar-center">
+      <span class="app-title">Renewable Energy Dashboard</span>
+    </div>
+
+    <div class="topbar-right">
+      <button id="notificationsBtn" class="icon-btn" title="Notifications"><i class="fa-solid fa-bell"></i></button>
+      <button id="settingsBtn" class="icon-btn" title="Settings"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="dashboard-container" role="main" aria-labelledby="welcomeUser">
+    <h1 id="welcomeUser">Welcome, User</h1>
+
+    <!-- Power graph -->
+    <section class="card">
+      <h2>Power Consumed VS Power Generated</h2>
+      <div class="chart-wrapper">
+        <canvas id="powerChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Average consumption -->
+    <section class="card">
+      <h2>Average Daily Power Consumption</h2>
+      <div class="card-content">
+        <p class="muted">[Average daily consumption summary / KPI placeholder]</p>
+      </div>
+    </section>
+
+    <!-- Battery health (2x4 matrix) -->
+    <section class="card">
+      <h2>Solar Battery Health Index</h2>
+      <div class="battery-grid" id="batteryGrid">
+        <div class="battery" data-battery="1">Battery 1</div>
+        <div class="battery" data-battery="2">Battery 2</div>
+        <div class="battery" data-battery="3">Battery 3</div>
+        <div class="battery" data-battery="4">Battery 4</div>
+        <div class="battery" data-battery="5">Battery 5</div>
+        <div class="battery" data-battery="6">Battery 6</div>
+        <div class="battery" data-battery="7">Battery 7</div>
+        <div class="battery" data-battery="8">Battery 8</div>
+      </div>
+    </section>
+
+    <!-- Predicted Power -->
+    <section class="card">
+      <h2>Predicted Power Requirement (Next Days)</h2>
+      <div class="chart-wrapper">
+        <canvas id="predictedChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (fixed) -->
+  <footer class="footer">
+    <button id="customerServiceBtn" class="footer-btn">Customer Service</button>
+    <button id="mygridBtn" class="footer-btn">MyGrid</button>
+    <button id="chatBtn" class="footer-btn">💬 Chatbot</button>
+  </footer>
+
+  <!-- DROPDOWNS / MODALS -->
+
+  <!-- Profile menu (appears under left icon) -->
+  <div id="profileMenu" class="dropdown-menu left">
+    <button class="close-small" aria-label="Close">&times;</button>
+    <h3>My Profile</h3>
+    <p><strong>Name:</strong> <span id="profileName">—</span></p>
+    <p><strong>Email:</strong> <span id="profileEmail">—</span></p>
+    <p><strong>Phone:</strong> <span id="profilePhone">—</span></p>
+    <p><strong>Plan:</strong> <span id="profilePlan">—</span></p>
+    <p><strong>Purchased:</strong> <span id="profileDate">—</span></p>
+    <p><strong>Duration:</strong> <span id="profileDuration">—</span></p>
+    <div style="margin-top:0.8rem;">
+      <button id="logoutBtn" class="btn">Logout</button>
+    </div>
+  </div>
+
+  <!-- Notifications menu (right, left of settings) -->
+  <div id="notificationsMenu" class="dropdown-menu right notifications-menu">
+    <button class="close-small" aria-label="Close">&times;</button>
+    <h3>Notifications</h3>
+    <ul id="notificationsList" class="notifications-list">
+      <li>No new notifications</li>
+    </ul>
+  </div>
+
+  <!-- Settings menu (rightmost) -->
+  <div id="settingsMenu" class="dropdown-menu right">
+    <button class="close-small" aria-label="Close">&times;</button>
+    <h3>Settings</h3>
+    <label for="themeSelect" style="display:block; text-align:left; margin-bottom:6px;"><strong>Theme</strong></label>
+    <select id="themeSelect" style="width:100%; margin-bottom:8px; padding:8px; border-radius:6px;">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+
+    <label style="display:block; text-align:left; margin-top:6px;"><strong>Change Password (demo)</strong></label>
+    <input id="newPassword" placeholder="New password" style="width:100%; padding:8px; margin:6px 0; border-radius:6px;">
+    <input id="confirmPassword" placeholder="Confirm password" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
+    <button id="changePasswordBtn" class="btn">Update Password</button>
+
+    <label for="subscriptionSelect" style="display:block; text-align:left; margin-top:10px;"><strong>Subscription</strong></label>
+    <select id="subscriptionSelect" style="width:100%; padding:8px; margin-top:6px; border-radius:6px;">
+      <option value="Basic">Basic</option>
+      <option value="Standard">Standard</option>
+      <option value="Premium">Premium</option>
+    </select>
+    <button id="changePlanBtn" class="btn" style="margin-top:8px;">Update Plan</button>
+  </div>
+
+  <!-- MyGrid popup (centered above footer) -->
+  <div id="mygridMenu" class="dropdown-menu mygrid-bottom">
+    <button class="close-small" aria-label="Close">&times;</button>
+    <h3>MyGrid — Downloads</h3>
+    <button id="download-generated" class="btn" style="width:100%; margin-top:6px;">Download Energy (3 days)</button>
+    <button id="download-storage" class="btn" style="width:100%; margin-top:8px;">Download Storage Info</button>
+    <button id="download-consumption" class="btn" style="width:100%; margin-top:8px;">Download Consumption</button>
+  </div>
+
+  <!-- Battery details modal (center) -->
+  <div id="batteryModal" class="modal">
+    <div class="modal-content">
+      <button class="close-small" aria-label="Close">&times;</button>
+      <h3 id="modalTitle">Battery Details</h3>
+      <div id="batteryContent">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Inline script wiring (self-contained to avoid mismatches) -->
+  <script>
+    // ---------- tiny helper ----------
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    // ---------- populate user data (demo from localStorage) ----------
+    function populateProfile() {
+      const name = localStorage.getItem('userName') || localStorage.getItem('username') || 'User';
+      const email = localStorage.getItem('userEmail') || localStorage.getItem('email') || 'user@example.com';
+      const phone = localStorage.getItem('userPhone') || localStorage.getItem('phone') || '+0000000000';
+      const sub = JSON.parse(localStorage.getItem('subscription') || JSON.stringify({plan:'Standard',purchaseDate:'2025-09-14',duration:'3 Months'}));
+
+      $('#welcomeUser').textContent = `Welcome, ${name}`;
+      $('#profileName').textContent = name;
+      $('#profileEmail').textContent = email;
+      $('#profilePhone').textContent = phone;
+      $('#profilePlan').textContent = sub.plan || (localStorage.getItem('userPlan') || 'Standard');
+      $('#profileDate').textContent = sub.purchaseDate || localStorage.getItem('subscriptionDate') || '-';
+      $('#profileDuration').textContent = sub.duration || '-';
+    }
+    populateProfile();
+
+    // ---------- charts (Chart.js) ----------
+    function initCharts() {
+      const pCtx = document.getElementById('powerChart');
+      if (pCtx) {
+        new Chart(pCtx.getContext('2d'), {
+          type:'line',
+          data:{
+            labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+            datasets:[
+              { label: 'Power Generated', data:[120,140,110,160,150,170,155], borderColor:'#3e7c59', backgroundColor:'rgba(62,124,89,0.1)', tension:0.3, fill:true },
+              { label: 'Power Consumed',  data:[90,110,95,120,100,130,115], borderColor:'#f4b400', backgroundColor:'rgba(244,180,0,0.08)', tension:0.3, fill:true }
+            ]
+          },
+          options:{ responsive:true, maintainAspectRatio:false }
+        });
+      }
+
+      const predCtx = document.getElementById('predictedChart');
+      if (predCtx) {
+        new Chart(predCtx.getContext('2d'), {
+          type:'bar',
+          data:{
+            labels:['Day1','Day2','Day3','Day4','Day5'],
+            datasets:[{ label:'Predicted Power', data:[95,105,100,115,95], backgroundColor:'#3e7c59' }]
+          },
+          options:{ responsive:true, maintainAspectRatio:false }
+        });
+      }
+    }
+    // init after small delay so canvases size correctly
+    setTimeout(initCharts, 60);
+
+    // ---------- toggle dropdowns/menus ----------
+    function hideAllMenus() {
+      $$('.dropdown-menu').forEach(m => m.style.display = 'none');
+      $$('.modal').forEach(m => m.style.display = 'none');
+    }
+
+    // profile (left)
+    $('#profileBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const m = $('#profileMenu');
+      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+      // ensure others closed
+      $('#notificationsMenu').style.display = 'none';
+      $('#settingsMenu').style.display = 'none';
+      $('#mygridMenu').style.display = 'none';
+    });
+
+    // notifications (right, left of settings)
+    $('#notificationsBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const m = $('#notificationsMenu');
+      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+      $('#profileMenu').style.display = 'none';
+      $('#settingsMenu').style.display = 'none';
+      $('#mygridMenu').style.display = 'none';
+      // load (demo)
+      loadNotifications();
+    });
+
+    // settings (rightmost)
+    $('#settingsBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const m = $('#settingsMenu');
+      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+      $('#profileMenu').style.display = 'none';
+      $('#notificationsMenu').style.display = 'none';
+      $('#mygridMenu').style.display = 'none';
+      // adjust theme select initial value
+      const sel = $('#themeSelect');
+      if (sel) sel.value = (document.body.classList.contains('dark-theme')) ? 'dark' : 'light';
+    });
+
+    // mygrid from footer (center popup above footer)
+    $('#mygridBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const m = $('#mygridMenu');
+      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+      $('#profileMenu').style.display = 'none';
+      $('#notificationsMenu').style.display = 'none';
+      $('#settingsMenu').style.display = 'none';
+    });
+
+    // close buttons in menus
+    $$('.dropdown-menu .close-small').forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.closest('.dropdown-menu').style.display = 'none';
+    }));
+
+    // close on outside click
+    document.addEventListener('click', () => hideAllMenus());
+
+    // stop propagation when clicking inside menus
+    $$('.dropdown-menu, .modal').forEach(el => el.addEventListener('click', e => e.stopPropagation()));
+
+    // ---------- Notifications loader (demo) ----------
+    function loadNotifications(){
+      const list = $('#notificationsList');
+      list.innerHTML = '';
+      const demo = [
+        'Battery 1 capacity low',
+        'New generation report available',
+        'Subscription renewal in 7 days',
+        'Maintenance scheduled 20 Sep'
+      ];
+      demo.forEach(n => {
+        const li = document.createElement('li');
+        li.textContent = n;
+        list.appendChild(li);
+      });
+    }
+
+    // ---------- battery click -> modal ----------
+    $$('.battery').forEach(b => b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.battery;
+      const modal = $('#batteryModal');
+      $('#modalTitle').textContent = `Battery ${id} Details`;
+      $('#batteryContent').innerHTML = '<p>Fetching data...</p>';
+      modal.style.display = 'flex';
+
+      // demo: replace with real backend fetch later
+      setTimeout(() => {
+        $('#batteryContent').innerHTML = `
+          <ul style="text-align:left; margin-top:8px;">
+            <li><strong>ID:</strong> ${id}</li>
+            <li><strong>Capacity:</strong> ${Math.floor(75 + Math.random()*20)}%</li>
+            <li><strong>Status:</strong> Good</li>
+            <li><strong>Voltage:</strong> 12.${Math.floor(Math.random()*9)} V</li>
+          </ul>`;
+      }, 300);
+    }));
+
+    // battery modal close
+    $$('#batteryModal .close-small').forEach(b=> b.addEventListener('click', ()=> $('#batteryModal').style.display='none'));
+    // close battery modal on outside click:
+    $('#batteryModal').addEventListener('click', (e)=> { if (e.target === $('#batteryModal')) $('#batteryModal').style.display='none'; });
+
+    // ---------- MyGrid download handlers (demo CSV) ----------
+    function downloadCSV(filename, content){
+      const data = content || 'Date,Value\n2025-09-01,100\n2025-09-02,120';
+      const link = document.createElement('a');
+      link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(data);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    $('#download-generated').addEventListener('click', ()=> downloadCSV('energy_generated.csv','Date,Generated\n2025-09-01,100\n2025-09-02,120'));
+    $('#download-storage').addEventListener('click', ()=> downloadCSV('storage_info.csv','Battery,Capacity,Status\nB1,90%,Good\nB2,85%,Good'));
+    $('#download-consumption').addEventListener('click', ()=> downloadCSV('consumption.csv','Date,Consumed\n2025-09-01,80\n2025-09-02,95'));
+
+    // ---------- Settings actions ----------
+    $('#changePasswordBtn').addEventListener('click', ()=>{
+      const p1 = $('#newPassword').value, p2 = $('#confirmPassword').value;
+      if(!p1){ alert('Enter new password'); return; }
+      if(p1 !== p2){ alert('Passwords do not match'); return; }
+      alert('Password updated (demo)');
+      $('#newPassword').value = $('#confirmPassword').value = '';
+    });
+
+    $('#changePlanBtn').addEventListener('click', ()=>{
+      const plan = $('#subscriptionSelect').value;
+      const sub = JSON.parse(localStorage.getItem('subscription') || '{}');
+      sub.plan = plan;
+      localStorage.setItem('subscription', JSON.stringify(sub));
+      alert('Subscription updated to ' + plan);
+      populateProfile();
+    });
+
+    // theme select
+    $('#themeSelect').addEventListener('change', (e)=>{
+      if(e.target.value === 'dark') document.body.classList.add('dark-theme');
+      else document.body.classList.remove('dark-theme');
+    });
+
+    // logout
+    $('#logoutBtn').addEventListener('click', ()=> {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    });
+
+    // ensure menus hidden when resizing/initial
+    hideAllMenus();
+  </script>
+</body>
+</html>

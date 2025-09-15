@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - Renewable Energy Monitoring</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="signup-container">
+    <h1 style="text-align:center;">Sign Up</h1>
+    <form class="auth-form" id="signupForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="tel" id="phone" placeholder="Phone Number" required>
+      <input type="password" id="password" placeholder="Password" required>
+    </form>
+
+    <!-- Subscription Plan Table -->
+    <h2 style="text-align:center;">Select Subscription Plan</h2>
+    <table class="subscription-table">
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Price</th>
+          <th>Duration</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Basic</td>
+          <td>$10</td>
+          <td>1 Month</td>
+          <td><input type="checkbox" name="plan" value="Basic"></td>
+        </tr>
+        <tr>
+          <td>Standard</td>
+          <td>$25</td>
+          <td>3 Months</td>
+          <td><input type="checkbox" name="plan" value="Standard"></td>
+        </tr>
+        <tr>
+          <td>Premium</td>
+          <td>$90</td>
+          <td>12 Months</td>
+          <td><input type="checkbox" name="plan" value="Premium"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Signup Button -->
+    <div style="text-align:center; margin-top:1rem;">
+      <button class="btn" id="signupBtn">Sign Up</button>
+    </div>
+
+    <!-- Consultation Booking Section -->
+    <div class="consult-box">
+      <h2 style="text-align:center;">Book Consultation</h2>
+      <input type="date" id="consultDate" required>
+      <select id="consultTime" required>
+        <option value="" disabled selected>Select Time Slot</option>
+        <option>09:00 - 10:00</option>
+        <option>10:00 - 11:00</option>
+        <option>11:00 - 12:00</option>
+        <option>12:00 - 13:00</option>
+        <option>14:00 - 15:00</option>
+        <option>15:00 - 16:00</option>
+        <option>16:00 - 17:00</option>
+        <option>17:00 - 18:00</option>
+      </select>
+
+      <div class="consult-actions" style="text-align:center; margin-top:1rem;">
+        <button class="btn" id="bookConsultBtn">Book</button>
+        <button class="btn" id="backToLoginBtn">Back to Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="signup-footer" style="display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:0.5rem 1rem;">
+    <button class="btn">Customer Service</button>
+    <button class="btn">Chat</button>
+  </footer>
+
+  <script>
+    document.getElementById('backToLoginBtn').addEventListener('click', () => {
+      window.location.href = "login.html";
+    });
+
+    document.getElementById('signupBtn').addEventListener('click', () => {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userPhone', phone);
+
+      alert("Signup successful!");
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>
