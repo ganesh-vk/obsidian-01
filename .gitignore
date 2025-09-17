@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 *.pyd
 .venv/
+.env
 
 # Ignore Docker data volumes
 influxdb/
