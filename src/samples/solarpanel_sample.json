@@ -1,0 +1,7 @@
+{
+    "panelId" : "string",
+    "voltage" : "float",
+    "current" : "float",
+    "temperature" : "float",
+    "averagePowerGeneration" : "float"
+}

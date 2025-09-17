@@ -1,0 +1,6 @@
+{
+    "loadId" : "string",
+    "powerConsumption" : "float",
+    "currentDraw" : "float",
+    "voltageLevel" : "float"
+}

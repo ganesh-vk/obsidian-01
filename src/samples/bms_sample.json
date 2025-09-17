@@ -1,0 +1,12 @@
+{
+    "gridId" : "string",
+    "voltageSeriesOne" : "float",
+    "voltageSeriesTwo" : "float",
+    "voltageSeriesThree" : "float",
+    "currentRating" : "float",
+    "soc" : "float",
+    "soh" : "float",
+    "cycleCount" : "int",
+    "balancingStatus" : "bool",
+    "temperature" : "float"
+}
