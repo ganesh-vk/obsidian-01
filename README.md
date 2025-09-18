@@ -1,5 +1,6 @@
 # obsidian-01
-SIH-2025
+SIH-2025 PS-25051
+Renewable Energy Monitoring System for Microgrids
 
 Members: 
 Ashmeet Singh
@@ -8,3 +9,4 @@ Ganesh K
 Naman Singh
 Ryan Tom Vinoy
 Shefali Badgi
+
