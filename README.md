@@ -10,3 +10,32 @@ Naman Singh
 Ryan Tom Vinoy
 Shefali Badgi
 
+⚡ Smart Microgrid Monitoring System
+A real-time microgrid monitoring solution built on the ESP32-S3 platform.
+This project integrates firmware, PCB design, data dashboards, and a 3D-printed enclosure to create a complete end-to-end system for monitoring batteries, solar panels, and other energy parameters.
+
+📂 Repository Structure
+  
+  🖼️ 3dDesignCase/
+    3D enclosure design files for the device.
+    Includes STEP files for CAD editing.
+    Include STL files for direct 3D printing.
+    Enables easy reproduction and customization of the case.
+  
+  📑 Datasheets/
+    Datasheets for all major components used in the system.
+    Microcontrollers, sensors, regulators, and display modules.
+    Acts as a technical reference for development and troubleshooting.
+  
+  🔌 PCB-footprints/
+    Custom KiCad footprints and symbols for the project PCB.
+    Verified component footprints used in schematic and layout.
+    Useful for replication, modification, and future PCB revisions.
+  
+  📊 dashboardCode/
+    Code and configuration for the monitoring dashboard.
+    Scripts and config files for Telegraf → InfluxDB → Grafana stack.
+    Dashboard JSON files for quick import into Grafana.
+    Provides real-time visualization of microgrid parameters.
+
+👨‍💻 Developed with passion by Team Obsidian-01
