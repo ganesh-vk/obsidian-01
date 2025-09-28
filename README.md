@@ -16,25 +16,25 @@ This project integrates firmware, PCB design, data dashboards, and a 3D-printed 
 
 📂 Repository Structure
   
-  🖼️ 3dDesignCase/
+  🖼️ design-case-3d/
     3D enclosure design files for the device.
     Includes STEP files for CAD editing.
     Include STL files for direct 3D printing.
     Enables easy reproduction and customization of the case.
   
-  📑 Datasheets/
+  📑 datasheets/
     Datasheets for all major components used in the system.
     Microcontrollers, sensors, regulators, and display modules.
     Acts as a technical reference for development and troubleshooting.
   
-  🔌 PCB-footprints/
+  🔌 pcb_design/
     Custom KiCad footprints and symbols for the project PCB.
     Verified component footprints used in schematic and layout.
     Useful for replication, modification, and future PCB revisions.
   
-  📊 dashboardCode/
-    Code and configuration for the monitoring dashboard.
-    Scripts and config files for Telegraf → InfluxDB → Grafana stack.
+  📊 /
+    Code and configuration for the monitoring dashboard and data ingestion pipeline.
+    Scripts and config files for Telegraf → InfluxDB → Grafana pipeline.
     Dashboard JSON files for quick import into Grafana.
     Provides real-time visualization of microgrid parameters.
 
